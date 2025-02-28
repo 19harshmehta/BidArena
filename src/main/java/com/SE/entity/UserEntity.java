@@ -27,6 +27,7 @@ public class UserEntity
 	 	private String username;
 	 	private String email;
 	    private String password;
+	    private String otp;
 
 	    @Enumerated(EnumType.STRING)
 	    private Role role; // ENUM(‘auctioneer’, ‘viewer’)

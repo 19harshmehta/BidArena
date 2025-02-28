@@ -1,5 +1,7 @@
 package com.SE.controller;
 
+import java.util.Date;
+
 import java.util.Optional;
 
 
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.SE.dto.LoginDto;
+import com.SE.dto.ResetPasswordDto;
 import com.SE.entity.UserEntity;
 import com.SE.repository.UserRepository;
+import com.SE.service.MailerService;
+import com.SE.service.OtpGenerator;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -25,6 +30,12 @@ public class SessionController {
 	@Autowired
 	BCryptPasswordEncoder bcrypt;
 	
+	@Autowired
+	OtpGenerator otpGeneratorService;
+	
+	@Autowired
+	MailerService mailerService;
+	
 //	@GetMapping( value ={"/" , "landingpage"})
 //	public String landingPage()
 //	{
@@ -34,6 +45,11 @@ public class SessionController {
 	@GetMapping("signup")
 	public String signUp() {
 		return "Signup";
+	}
+	
+	@GetMapping("welcome")
+	public String welcomeFile() {
+		return "Welcom";
 	}
 
 	@GetMapping("login")
@@ -69,7 +85,7 @@ public class SessionController {
 
 					
 					
-						return "redirect:/signup";
+						return "redirect:/welcome";
 					}
 
 			
@@ -77,4 +93,57 @@ public class SessionController {
 		model.addAttribute("error", "Invalid Credentials...");
 		return "Login";
 	}
+	
+	@GetMapping("verifyemail")
+	public String emailVerify() {
+		return "VerifyEmail";
+	}
+	
+	@PostMapping("verifyemail")
+	public String checkEmail(LoginDto loginDto, Model model) {
+		Optional<UserEntity> opt = userRepo.findByEmail(loginDto.getEmail());
+		if (opt.isPresent()) {
+			UserEntity user = opt.get();	
+					String otp = otpGeneratorService.generateOtp(6);
+					user.setOtp(otp);
+	
+					Runnable r = () -> {
+	
+						mailerService.sendForgotPasswordOTP(user);
+					};
+					Thread t = new Thread(r);
+					t.start();
+					userRepo.save(user);
+					return "ChangePassword";
+			
+		} else 
+		{
+			model.addAttribute("error", "Invalid email please check again or Sign up");
+		}
+		return "VerifyEmail";
+	}
+	
+	@GetMapping("changepassword")
+	public String changePasswd() {
+		
+		return "ChangePassword";
+	}
+	
+	@PostMapping("changepassword")
+	public String changePassword(ResetPasswordDto rDto, Model model) {
+		Optional<UserEntity> userOptional = userRepo.findByEmail(rDto.getEmail());
+		if (userOptional.isPresent()) {
+			UserEntity user = userOptional.get();
+
+			if (user.getOtp().equals(rDto.getOtp())) {
+				user.setPassword(bcrypt.encode(rDto.getPassword()));
+				userRepo.save(user);
+				return "Login";
+				
+			}
+		}
+		model.addAttribute("error", "Invalid Credentials...");
+		return "ChangePassword";
+	}
+	
 }
