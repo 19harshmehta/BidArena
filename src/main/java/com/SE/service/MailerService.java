@@ -1,6 +1,8 @@
 package com.SE.service;
 
 import java.util.Properties;
+import io.github.cdimascio.dotenv.Dotenv;
+
 import javax.mail.*;
 import javax.mail.internet.*;
 
@@ -10,11 +12,17 @@ import com.SE.entity.UserEntity;
 @Service
 public class MailerService {
 
-    private final String FROM_EMAIL = "market.mindss23@gmail.com";
-    private final String APP_PASSWORD = "myhrwiyyyeoetepg";
+	private final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+    private final String FROM_EMAIL;
+    private final String APP_PASSWORD;
+
     private final Properties mailProperties;
 
     public MailerService() {
+    	FROM_EMAIL = dotenv.get("MAIL_FROM_EMAIL");
+        APP_PASSWORD = dotenv.get("MAIL_APP_PASSWORD");
+    	System.out.println("MAIL_FROM_EMAIL: " + FROM_EMAIL);
+        System.out.println("MAIL_APP_PASSWORD: " + APP_PASSWORD);
         mailProperties = new Properties();
         mailProperties.put("mail.smtp.auth", "true");
         mailProperties.put("mail.smtp.starttls.enable", "true");
