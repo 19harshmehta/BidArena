@@ -49,7 +49,7 @@ public class SessionController {
 	
 	@GetMapping("welcome")
 	public String welcomeFile() {
-		return "Welcom";
+		return "Welcome";
 	}
 
 	@GetMapping("login")
