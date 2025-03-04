@@ -11,6 +11,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -25,13 +27,19 @@ public class AuctionEntity
 	    private Integer auctionId;
 	    private String leagueName;
 	    private Integer numTeams;
+	    private Integer numPlayers;
+	    private Integer maxNumPlayers;
 	    private Integer walletPerTeam;
 	    private String auctionCode;
 	    private LocalDateTime createdAt;
 	    private Integer basePrice;
+	    
+	    @ManyToOne
+	    @JoinColumn(name = "created_by", nullable = false) 
+	    private UserEntity createdBy;
 
 	    @Enumerated(EnumType.STRING)
-	    private AuctionStatus status; // ENUM(‘pending’, ‘ongoing’, ‘completed’)
+	    private AuctionStatus status; // ENUM(‘created’, ‘ongoing’, ‘completed’)
 
 	    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
 	    private List<TeamEntity> teams; // One auction has multiple teams
@@ -42,10 +50,11 @@ public class AuctionEntity
 	    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
 	    private List<BidEntity> bids; // One auction has multiple bids
 
-	    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
-	    private List<UserEntity> users; // Viewers and auctioneer linked to the auction
+//	    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
+//	    private List<UserEntity> users; // Viewers and auctioneer linked to the auction
 
+	    
 	    public enum AuctionStatus {
-	        PENDING, ONGOING, COMPLETED
+	        CREATED, ONGOING, COMPLETED
 	    }
 }
