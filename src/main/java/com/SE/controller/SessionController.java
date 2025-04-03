@@ -1,7 +1,7 @@
 package com.SE.controller;
 
 import java.util.Date;
-
+import java.util.List;
 import java.util.Optional;
 
 
@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.SE.dto.LoginDto;
 import com.SE.dto.ResetPasswordDto;
+import com.SE.entity.AuctionEntity;
 import com.SE.entity.UserEntity;
+import com.SE.repository.AuctionRepository;
 import com.SE.repository.UserRepository;
 import com.SE.service.MailerService;
 import com.SE.service.OtpGenerator;
@@ -36,11 +38,9 @@ public class SessionController {
 	@Autowired
 	MailerService mailerService;
 	
-//	@GetMapping( value ={"/" , "landingpage"})
-//	public String landingPage()
-//	{
-//		return "LandingPage";
-//	}
+	@Autowired
+	AuctionRepository auctionRepo;
+	
 	
 	@GetMapping("signup")
 	public String signUp() {
@@ -80,12 +80,12 @@ public class SessionController {
 
 					session.setAttribute("user", user);
 					session.setAttribute("userId", user.getUserId());
-//					session.setMaxInactiveInterval(43200);
 					model.addAttribute("msg","Login Done");
 
 					
-					
-						return "redirect:/welcome";
+					List<AuctionEntity> auctions = auctionRepo.findByCreatedBy(user);
+					session.setAttribute("auctions", auctions);
+		            	return "Welcome";
 					}
 
 			

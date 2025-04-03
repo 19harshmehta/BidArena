@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.CellType;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.SE.entity.AuctionEntity;
 import com.SE.entity.PlayerEntity;
+import com.SE.entity.PlayerEntity.PlayerStatus;
 import com.SE.entity.TeamEntity;
 import com.SE.repository.AuctionRepository;
 import com.SE.repository.PlayerRepository;
@@ -35,6 +38,8 @@ public class PlayerService {
 
     @Autowired
     private AuctionRepository auctionRepository;
+    
+    private Random random = new Random();
 
     private static final Logger logger = LoggerFactory.getLogger(PlayerService.class);
     
@@ -74,7 +79,11 @@ public class PlayerService {
 
             String soldToTeamName = row.getCell(5).getStringCellValue();
             player.setSoldToTeam(teamMap.getOrDefault(soldToTeamName, null));
-
+            player.setBatting(row.getCell(5).getStringCellValue());
+            player.setBalling(row.getCell(6).getStringCellValue());
+            player.setWicketkeeper(row.getCell(7).getStringCellValue());
+            player.setAge((int)row.getCell(8).getNumericCellValue());
+            
             players.add(player);
             logger.info("Processed player: {}", player.getName());
         }
@@ -86,5 +95,42 @@ public class PlayerService {
 
     public void savePlayers(List<PlayerEntity> players) {
         playerRepo.saveAll(players);
+    }
+    
+    
+    public PlayerEntity getRandomAvailablePlayer(Integer auctionId) {
+        List<PlayerEntity> availablePlayers = playerRepo.findByAuction_AuctionIdAndStatus(auctionId,PlayerStatus.UNSOLD);
+        
+        if (availablePlayers.isEmpty()) {
+            return null; // No more players left
+        }
+        
+        return availablePlayers.get(random.nextInt(availablePlayers.size()));
+    }
+
+    public void finalizeBid(Integer playerId, Integer teamId, int bidAmount) {
+        Optional<PlayerEntity> playerOpt = playerRepo.findByPlayerId(playerId);
+        Optional<TeamEntity> teamOpt = teamRepo.findById(teamId);
+
+        if (playerOpt.isPresent() && teamOpt.isPresent()) {
+            PlayerEntity player = playerOpt.get();
+            TeamEntity team = teamOpt.get();
+
+            // Check if team has enough balance
+            if (team.getWallet() < bidAmount) {
+                throw new RuntimeException("Insufficient wallet balance.");
+            }
+
+            // Deduct amount and assign player
+            team.setWallet(team.getWallet() - bidAmount);
+            player.setStatus(PlayerStatus.SOLD); // Mark player as sold
+            player.setTeam(team);
+
+            // Save updates
+            playerRepo.save(player);
+            teamRepo.save(team);
+        } else {
+            throw new RuntimeException("Invalid player or team.");
+        }
     }
 }

@@ -31,7 +31,10 @@ public class ExcelHelper {
                 player.setSkills(currentRow.getCell(1).getStringCellValue());
                 player.setStatus(PlayerStatus.valueOf(currentRow.getCell(2).getStringCellValue().toUpperCase()));
                 player.setSoldPrice((int) currentRow.getCell(3).getNumericCellValue());
-
+                player.setBatting(currentRow.getCell(4).getStringCellValue());
+                player.setBalling(currentRow.getCell(5).getStringCellValue());
+                player.setWicketkeeper(currentRow.getCell(6).getStringCellValue());
+                player.setAge((int) currentRow.getCell(7).getNumericCellValue());
                 players.add(player);
             }
         } catch (Exception e) {

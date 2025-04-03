@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="text-center p-t-115">
-                    <a class="txt2" href="/dashboard">
+                    <a class="txt2" href="/welcome">
                         Back to Dashboard
                     </a>
                 </div>

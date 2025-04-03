@@ -19,8 +19,7 @@ public class OtpGenerator
 
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < length; i++) {
-			// Use of charAt() method : to get character value
-			// Use of nextInt() as it is scanning the value as int
+			
 			int index = (int) (Math.random() * values.length());
 			sb.append(values.charAt(index));
 		}

@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.SE.entity.AuctionEntity;
 import com.SE.entity.TeamEntity;
+import com.SE.entity.UserEntity;
+import com.SE.repository.AuctionRepository;
 import com.SE.service.PlayerService;
 import com.SE.service.TeamService;
 
@@ -24,6 +27,9 @@ public class FileUploadController {
 
     @Autowired
     private PlayerService playerService;
+    
+    @Autowired
+    private AuctionRepository auctionRepo;
 
     @PostMapping("/uploadfiles")
     public String uploadFiles(@RequestParam("teamsFile") MultipartFile teamsFile,
@@ -49,11 +55,14 @@ public class FileUploadController {
             playerService.processAndSavePlayers(playersFile, auctionId, teams);
 
             redirectAttributes.addFlashAttribute("success", "Teams and Players uploaded successfully.");
+            UserEntity user =(UserEntity) session.getAttribute("user");
+            List<AuctionEntity> auctions = auctionRepo.findByCreatedBy(user);
+			session.setAttribute("auctions", auctions);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error processing files: " + e.getMessage());
         }
 
-        return "redirect:/uploaddata";
+        return "redirect:/welcome";
     }
 
 }

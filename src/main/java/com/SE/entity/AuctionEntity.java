@@ -4,6 +4,9 @@ package com.SE.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,6 +34,8 @@ public class AuctionEntity
 	    private Integer maxNumPlayers;
 	    private Integer walletPerTeam;
 	    private String auctionCode;
+	    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	    @JsonIgnore
 	    private LocalDateTime createdAt;
 	    private Integer basePrice;
 	    
@@ -43,7 +48,7 @@ public class AuctionEntity
 
 	    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
 	    private List<TeamEntity> teams; // One auction has multiple teams
-
+ 
 	    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
 	    private List<PlayerEntity> players; // One auction has multiple players
 

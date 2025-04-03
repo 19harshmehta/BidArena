@@ -1,3 +1,6 @@
+<%@page import="org.springframework.ui.Model"%>
+<%@page import="com.SE.entity.AuctionEntity"%>
+<%@page import="java.util.List"%>
 <%@page import="com.SE.entity.UserEntity"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 
@@ -135,7 +138,8 @@
             background: #ffffff;
         }
 
-        /* Responsive Design */
+        
+        
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -152,6 +156,51 @@
                 display: block;
             }
         }
+        
+        .table-custom {
+		    width: 100%;
+		    border-collapse: collapse;
+		    border-radius: 8px;
+		    overflow: hidden;
+		    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+		}
+		
+		.table-custom th, .table-custom td {
+		    padding: 12px;
+		    text-align: center;
+		}
+		
+		.table-custom th {
+		    background: #0d6efd; /* Bootstrap Primary Blue */
+		    color: white;
+		    font-weight: bold;
+		}
+		
+		.table-custom tr:nth-child(even) {
+		    background: #f8f9fa; /* Light Gray */
+		}
+		
+		.table-custom tr:hover {
+		    background: #dee2e6; /* Hover effect */
+		}
+		
+		
+		.download-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+        
     </style>
 </head>
 <body>
@@ -184,9 +233,52 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <h1>Welcome to the Dashboard</h1>
-            <p>This is your main content area.</p>
+            <h1>Welcome to the Dashboard</h1>   
+<%
+    List<AuctionEntity> auctions = (List<AuctionEntity>) session.getAttribute("auctions");
+%>
+
+<h2>Your Auctions</h2>
+
+<table border="1" style="width:100%; border-collapse: collapse;" class="table-custom">
+    <thead>
+        <tr>
+            <th>Auction Code</th>
+            <th>Name</th>
+            <th>Created On</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (auctions != null && !auctions.isEmpty()) { %>
+            <% for (AuctionEntity auction : auctions) { %>
+                <tr>
+                    <td><%= auction.getAuctionCode() %></td>
+                    <td><%= auction.getLeagueName() %></td>
+                    <td><%= auction.getCreatedAt() %></td>
+                    <td><%= auction.getStatus() %></td>
+                    <td>
+					    <a href="#" onclick="startAuction(<%= auction.getAuctionId() %>, this)" 
+					       class="start-link">Start Auction</a> | 
+					    <a href="#" onclick="startUnsold(<%= auction.getAuctionId() %>, this)" 
+					       class="start-link">Start Unsold</a> | 
+					    <a href="#" onclick="endAuction(<%= auction.getAuctionId() %>, this)">End Auction</a> |
+					   <a href="${pageContext.request.contextPath}/report/download?auctionId=<%=auction.getAuctionId() %>" class="download-btn">Download Auction Report</a>
+
+					</td>
+                </tr>
+            <% } %>
+        <% } else { %>
+            <tr>
+                <td colspan="6" style="text-align:center;">No auctions found.</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
+        <div><a href="createauction">Create Auction</a></div>
         </div>
+        
     </div>
 
     <script>
@@ -207,6 +299,33 @@
         function toggleSidebar() {
             var sidebar = document.getElementById("sidebar");
             sidebar.classList.toggle("open");
+        }
+        
+        
+        function startAuction(auctionId, element) {
+            window.location.href = "startAuction?id=" + auctionId;
+        }
+
+        function startUnsold(auctionId, element) {
+            window.location.href = "startAuction?id=" + auctionId;
+        }
+
+        function endAuction(auctionId, element) {
+        	console.log("Auction ID:", auctionId);
+            if (confirm("Are you sure you want to end this auction?")) {
+                fetch("/endAuction?id="+auctionId, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = "/welcome"; // Redirect to welcome page
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            } else {
+                window.location.href = "/welcome"; // Redirect if user cancels
+            }
         }
     </script>
 
