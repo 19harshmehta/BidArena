@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    
+<%@ include file="Layout.jsp" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +26,20 @@
 <link rel="stylesheet" type="text/css" href="../assets/css/util.css">
 <link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 
+<style>
+    .wrap-login100 {
+        width: 80% !important; /* or 100%, based on your design */
+        max-width: 1000px;     /* adjust as needed */
+        margin-top : -50px;
+    }
+    
+    .container-login100{
+    	margin : 0px;
+    }
+    
+</style>
+
+
 </head>
 <body>
 
@@ -34,25 +51,35 @@
                     Create Auction
                 </span>
 
-                <div class="wrap-input100 validate-input" data-validate="Enter League Name">
-                    <input class="input100" type="text" name="leagueName" required>
-                    <span class="focus-input100" data-placeholder="League Name"></span>
-                </div>
-                
-                <div class="wrap-input100 validate-input" data-validate="Enter Number of Teams">
-                    <input class="input100" type="number" name="numTeams" min="4" required>
-                    <span class="focus-input100" data-placeholder="Number of Teams"></span>
-                </div>
+               	<div class="row">
+    				<div class="col-md-6">
+				        <div class="wrap-input100 validate-input" data-validate="Enter League Name">
+				            <input class="input100" type="text" name="leagueName" required>
+				            <span class="focus-input100" data-placeholder="League Name"></span>
+				        </div>
+				    </div>
+				    <div class="col-md-6">
+				        <div class="wrap-input100 validate-input" data-validate="Enter Number of Teams">
+				            <input class="input100" type="number" name="numTeams" min="4" required>
+				            <span class="focus-input100" data-placeholder="Number of Teams"></span>
+				        </div>
+				    </div>
+				</div>
 				
-				 <div class="wrap-input100 validate-input" data-validate="Enter min. Number of players in each team">
-                    <input class="input100" type="number" name="numPlayers" min="2" required>
-                    <span class="focus-input100" data-placeholder="min. No. of Players(in each team)"></span>
-                </div>
-                
-                <div class="wrap-input100 validate-input" data-validate="Enter max. Number of players in each team">
-                    <input class="input100" type="number" name="maxNumPlayers" required>
-                    <span class="focus-input100" data-placeholder="max. No. of Players(in each team)"></span>
-                </div>
+				<div class="row">
+				    <div class="col-md-6">
+				        <div class="wrap-input100 validate-input" data-validate="Enter min. Number of players in each team">
+				            <input class="input100" type="number" name="numPlayers" min="2" required>
+				            <span class="focus-input100" data-placeholder="min. No. of Players (in each team)"></span>
+				        </div>
+				    </div>
+				    <div class="col-md-6">
+				        <div class="wrap-input100 validate-input" data-validate="Enter max. Number of players in each team">
+				            <input class="input100" type="number" name="maxNumPlayers" required>
+				            <span class="focus-input100" data-placeholder="max. No. of Players (in each team)"></span>
+				        </div>
+				    </div>
+				</div>
 
                 <div class="wrap-input100 validate-input" data-validate="Enter Wallet per Team">
                     <input class="input100" type="number" name="walletPerTeam" min="0" required>
@@ -75,18 +102,16 @@
                     </div>
                 </div>
 
-                <div class="text-center p-t-115">
+                <div class="text-center p-t-50">
                     <a class="txt2" href="/dashboard">
                         Back to Dashboard
                     </a>
                 </div>
 
             </form>
-        </div>
     </div>
 </div>
 
-<div id="dropDownSelect1"></div>
 
 <!-- JavaScript -->
 <script src="../assets/vendor/jquery/jquery-3.2.1.min.js"></script>

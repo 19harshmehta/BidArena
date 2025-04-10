@@ -50,37 +50,233 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auction Page</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; }
-        .container { display: flex; gap: 20px; justify-content: center; margin-top: 30px; }
-        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        h2 { color: #ff9800; }
-        .bid-display { font-size: 20px; font-weight: bold; color: #d32f2f; }
-        .bid-buttons button { margin: 5px; padding: 8px 12px; border: none; cursor: pointer; }
-        .team-select button { margin: 5px; padding: 8px 12px; border: none; background-color: #007bff; color: white; border-radius: 5px; }
-        .finalize-button { background-color: #28a745; color: white; padding: 10px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-    	 .team-list { margin-bottom: 20px; }
+    	.top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #a64bf4;
+            background: linear-gradient(to right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left:-10px;
+            z-index: 1000;
+            
+        }
+        .top-nav .brand {
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-left: 40px;
+        }
+    	
+        body { 
+        	font-family: Arial, sans-serif;
+        	
+        	text-align: center;
+        	background: #EDF2FF;
+        }
+        
+        .container {
+        	display: flex; 
+        	gap: 20px; 
+        	justify-content: center;
+        	margin-top:100px;
+        }
+        
+        .panel { 
+        	background-color: white;
+        	height: 700px;
+        	width: 45%;
+        	padding: 10px; 
+        	border-radius: 8px; 
+        	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+            
+        h1 { 
+        	color: #5596fc; 
+        	margin-top: 30px;
+        	font-weight: bolder;
+        	font-size: 40px;
+        }
+        
+        .player-info-vertical-scroll {
+		    max-height: 45px; /* adjust height */
+		    overflow-y: auto;
+		    
+		    /* hide scrollbar for Webkit (Chrome, Safari) */
+		    scrollbar-width: none; /* Firefox */
+		    -ms-overflow-style: none; /* IE and Edge */
+		}
+		
+		.player-info-vertical-scroll::-webkit-scrollbar {
+		    display: none; /* Chrome, Safari */
+		}
+		
+		
+		.right-player-info-vertical-scroll {
+		    max-height: 480px; /* adjust height */
+		    overflow-y: auto;
+		    
+		    /* hide scrollbar for Webkit (Chrome, Safari) */
+		    scrollbar-width: none; /* Firefox */
+		    -ms-overflow-style: none; /* IE and Edge */
+		}
+		
+		.player-info-vertical-scroll::-webkit-scrollbar {
+		    display: none; /* Chrome, Safari */
+		}
+
+        
+        .bid-display { 
+        	font-size: 20px; 
+        	font-weight: bold; 
+        	color: #d32f2f; 
+        }
+        
+        .bid-buttons {
+        	border: none;
+        	border-radius: 20px;
+        	padding: 15px 10px;
+        	margin-top: -10px;
+        	background: #f1f1f1;
+        }
+        
+        .bid-buttons p{
+        	margin-top: -5px;
+        	color: black;
+        	font-weight: bold;
+        	font-size: 20px;
+        }
+        
+        .bid-buttons button { 
+        	padding: 8px 12px;
+        	width: 100px; 
+        	border: none; 
+        	margin: 0 5px;
+        	font-weight:bold;
+        	border-radius: 5px;
+        	cursor: pointer; 
+        	background-color: #ff9f00;
+        }
+        
+        .bid-buttons button:hover { 
+        	transform: scale(1.03);
+        }
+        
+        .team-select button { 
+	        margin: 5px; 
+	        padding: 8px 12px; 
+	        border: none; 
+	        background-color: #007bff;
+	        color: white; 
+	        font-weight:bold;
+	        border-radius: 5px; 
+        }
+        
+        .team-select button:hover { 
+	        transform: scale(1.03);
+        }
+        
+        .finalize-button { 
+        	background-color: #28a745; 
+        	color: white; 
+        	font-weight: bold;
+        	padding: 10px; 
+        	width: 200px;
+        	cursor: pointer;
+        	border: 1px solid black; 
+        	border-radius: 5px; 
+        	margin-top: 10px; 
+        	margin: 0 5px;
+        }
+        
+        .finalize-button:hover{
+        	transform: scale(1.03);
+        }
+        
+        .bottom-panel {
+		    background-color: #f1f1f1;
+		    padding: 20px 10px;
+		    border: 0;
+		    border-radius: 20px;
+		    margin-top: 38px;
+		}
+		
+		.bottom-panel h2 {
+		    margin-bottom: 10px;
+		    margin-top: 0;
+		}
+    	
+    	.team-list { 
+    		margin-bottom: 30px; 
+    	}
+        
         .team-item {
-            display: flex; justify-content: space-between;
-            padding: 8px; border-bottom: 1px solid #ddd;
+            display: flex; 
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
         }
     </style>
 </head>
 
 <body>
+<!--<audio id="soldSound" src="resources/static/assets/sound/ipl_tune.mp3" preload="auto"></audio>-->	
+    <div class="top-nav">
+		<div class="brand"><%= auction.getLeagueName() %></div>
+	</div>
     <div class="container">
         <!-- Left Panel -->
         <div class="panel">
         <%if(currentPlayer != null){ %>
-            <h2><%= auction.getLeagueName() %></h2>
-            <img src="<%= currentPlayer.getImageUrl() %>" width="100" alt="Player Image">
-            <p><strong>Name:</strong> <%= currentPlayer.getName() %></p>
-            <p><strong>Age:</strong> <%= currentPlayer.getAge() %></p>
-            <p><strong>Batting:</strong> <%= currentPlayer.getBatting() %></p>
-            <p><strong>Bowling:</strong> <%= currentPlayer.getBalling() %></p>
-            <p><strong>Wicket Keeping:</strong> <%= currentPlayer.getWicketkeeper() %></p>
-            <p class="bid-display">Current Bid:  <span id="currentBid"><%= auction.getBasePrice() %></span></p>
-            <h3>Raise Bid</h3>
+            
+            <!-- <img src="<%= currentPlayer.getImageUrl() %>" width="300px;" alt="Player Image"> -->
+            <img src="/assets/players/one.jpeg" width="300px;" alt="Player Image">
+			
+			    <p><strong>Name:</strong> <%= currentPlayer.getName() %></p>
+			    <p><strong>Age:</strong> <%= currentPlayer.getAge() %></p>
+			<div class="player-info-vertical-scroll">
+			    <p><strong>Description:</strong> <%= currentPlayer.getSkills() %></p>
+			</div>
+			    <p><strong>Batting:</strong> <%= currentPlayer.getBatting() %></p>
+			    <p><strong>Bowling:</strong> <%= currentPlayer.getBalling() %></p>
+			    <p><strong>Wicket Keeping:</strong> <%= currentPlayer.getWicketkeeper() %></p>
+			    <p class="bid-display"><strong>Current Bid:</strong> <span id="currentBid"><%= auction.getBasePrice() %></span></p>
+			
+			
+            <audio id="soldSound" src="/assets/sound/ipl_tune.mp3" preload="auto"></audio>
+
+			<div id="soldStamp" style="
+			    position: absolute;
+			    top: 150px;
+			    left: 60px;
+			    font-size: 64px;
+			    font-weight: bold;
+			    color: green;
+			    transform: scale(0.5) rotate(-20deg);
+			    opacity: 0;
+			    transition: all 0.6s ease-in-out;
+			    border: 3px solid green;
+			    z-index: 1000;">SOLD</div>
+            
+            <div id="unsoldStamp" style="
+			    position: absolute;
+			    top: 150px;
+			    left: 35px;
+			    font-size: 64px;
+			    font-weight: bold;
+			    color: red;
+			    transform: scale(0.5) rotate(-20deg);
+			    opacity: 0;
+			    transition: all 0.6s ease-in-out;
+			    border: 3px solid red;
+			    z-index: 1000;">UNSOLD</div>
+
             <div class="bid-buttons">
+            	<p>Raise Bid</p>
                 <button onclick="increaseBid(100)">+100</button>
                 <button onclick="increaseBid(200)">+200</button>
                 <button onclick="increaseBid(500)">+500</button>
@@ -90,29 +286,34 @@
 		
         <!-- Right Panel -->
         <div class="panel">
-        <div class="team-list" id="teamList">
-                <% for (TeamEntity team : teams) { %>
-                    <div class="team-item">
-                    <%if(team.getWallet() > (auction.getWalletPerTeam() * 0.2)){  %>
-                        <span><%=team.getTeamName()%></span>
-                        <span>  <span class="wallet" data-team="<%=team.getTeamId()%>"><%=team.getWallet()%></span></span>
-                    <%} else{%>
-                    	<span><%=team.getTeamName()%></span>
-                        <span>  <span style="background-color: red;" class="wallet" data-team="<%=team.getTeamId()%>"><%=team.getWallet()%></span></span>
-                    <%} %>
-                    </div>
-                <% } %>
-         </div>
-            <h3>Select Team</h3>
-            <div class="team-select" id="teamSelect">
-                <% for (TeamEntity team : teams) { %>
-                    <button onclick="selectTeam('<%= team.getTeamId() %>')"><%= team.getTeamName() %></button>
-                <% } %>
-            </div>
-            <button class="finalize-button" onclick="finalizeBid()">Finalize Bid</button>
-            <button class="finalize-button" style="background-color: #dc3545;" onclick="markUnsold()">Unsold</button> 
-        </div>
-    </div>
+        <div class="right-player-info-vertical-scroll">
+	        <div class="team-list" id="teamList">
+	                <% for (TeamEntity team : teams) { %>
+	                    <div class="team-item">
+	                    <%if(team.getWallet() > (auction.getWalletPerTeam() * 0.2)){  %>
+	                        <span><%=team.getTeamName()%></span>
+	                        <span>  <span class="wallet" data-team="<%=team.getTeamId()%>"><%=team.getWallet()%></span></span>
+	                    <%} else{%>
+	                    	<span><%=team.getTeamName()%></span>
+	                        <span>  <span style="background-color: red;" class="wallet" data-team="<%=team.getTeamId()%>"><%=team.getWallet()%></span></span>
+	                    <%} %>
+	                    </div>
+	                <% } %>
+	         </div>
+	         </div>
+	         
+	         <!-- Bottom Section -->
+		    <div class="bottom-panel">
+		        <h2>Select Team</h2>
+		        <div class="team-select" id="teamSelect">
+		            <% for (TeamEntity team : teams) { %>
+		                <button onclick="selectTeam('<%= team.getTeamId() %>')"><%= team.getTeamName() %></button>
+		            <% } %>
+		        </div>
+		        <button class="finalize-button" onclick="finalizeBid()">Sold</button>
+		        <button class="finalize-button" style="background-color: #dc3545;" onclick="markUnsold()">Unsold</button>
+		    </div>
+    	</div>
 
     <script>
         let currentBid = <%= auction.getBasePrice() %>;
@@ -120,7 +321,22 @@
         let auctionedPlayers = JSON.parse(localStorage.getItem("auctionedPlayers")) || [];
 
         function markUnsold() {
-            window.location.reload(); 
+        	const unsoldStamp = document.getElementById("unsoldStamp");
+
+            // Show animation
+            unsoldStamp.style.opacity = 1;
+            unsoldStamp.style.transform = "scale(1.2) rotate(-20deg)";
+            unsoldStamp.style.transition = "all 0.6s ease-in-out";
+
+            setTimeout(() => {
+                unsoldStamp.style.transform = "scale(1) rotate(-20deg)";
+            }, 100);
+
+            // Wait for animation, then hide and reload
+            setTimeout(() => {
+                unsoldStamp.style.opacity = 0;
+                window.location.reload(); 
+            }, 3000); // 3 seconds delay 
         }
 
         function increaseBid(amount) {
@@ -136,7 +352,7 @@
         
 
         function finalizeBid() {
-            if (!selectedTeam) {
+        	if (!selectedTeam) {
                 alert("Please select a team before finalizing the bid.");
                 return;
             }
@@ -151,14 +367,41 @@
             auctionedPlayers.push(playerData);
             localStorage.setItem("auctionedPlayers", JSON.stringify(auctionedPlayers));
 
-         // **Update Wallet Balance in the Frontend Immediately**
+            // Update Wallet Balance in the Frontend Immediately
             updateWalletDisplay(selectedTeam, currentBid);
-            
-            // Check if 10 players are stored, then send to backend
-            if (auctionedPlayers.length >= 1 ) {
-                sendToBackend();
+
+            //Start: Animation + Sound
+            const soldSound = document.getElementById("soldSound");
+            const soldStamp = document.getElementById("soldStamp");
+
+            if (soldSound && soldStamp) {
+                soldSound.play(); // Play sold sound
+
+                soldStamp.style.opacity = 1;
+                soldStamp.style.transform = "scale(1.2) rotate(-20deg)";
+                setTimeout(() => {
+                    soldStamp.style.transform = "scale(1) rotate(-20deg)";
+                }, 150);
+
+                // Wait for animation to finish, then continue logic
+                setTimeout(() => {
+                    soldStamp.style.opacity = 0;
+
+                    // Proceed with player reload or backend sync
+                    if (auctionedPlayers.length >= 1) {
+                        sendToBackend();
+                    } else {
+                        window.location.reload();
+                    }
+
+                }, 3000);
             } else {
-                window.location.reload(); // Load new player
+                // Fallback: continue logic if sound or stamp not found
+                if (auctionedPlayers.length >= 1) {
+                    sendToBackend();
+                } else {
+                    window.location.reload();
+                }
             }
         }
         
