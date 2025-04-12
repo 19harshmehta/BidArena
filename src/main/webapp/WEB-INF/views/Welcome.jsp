@@ -123,7 +123,7 @@
                         </div>
                         <div class="card-buttons2">
                             <a href="${pageContext.request.contextPath}/report/download?auctionId=<%=auction.getAuctionId() %>" class="download-btn wid">Download Report</a>
-                            <a href="viewAuctionDetails.jsp?auctionId=<%=auction.getAuctionId()%>" class="download-btn details-btn wid">View Details</a> 
+                            <a href="viewdetails?auctionId=<%=auction.getAuctionId()%>" class="download-btn details-btn wid">View Details</a> 
                         </div>
                     	</div>
                     </div>

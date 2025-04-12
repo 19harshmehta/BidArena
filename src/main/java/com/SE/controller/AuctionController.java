@@ -1,14 +1,19 @@
 package com.SE.controller;
 
+import java.net.URL;
 import java.time.LocalDateTime;
-
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.StreamUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,7 +41,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.itextpdf.text.pdf.codec.Base64.InputStream;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -156,5 +163,90 @@ public class AuctionController
 	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"success\": false, \"message\": \"Auction not found\"}");
 	}
 
+	@GetMapping("/viewdetails")
+    public String viewAuctionDetails(@RequestParam("auctionId") Integer auctionId, Model model) {
 
+        List<PlayerEntity> players = playerRepo.findByAuction_AuctionId(auctionId);
+        List<TeamEntity> teams = teamRepo.findTeamsByAuctionIdList(auctionId);
+
+        Integer totalPlayers = players.size();
+        Integer totalTeams = teams.size();
+
+        Integer soldPlayers = (int) players.stream().filter(p -> p.getStatus().toString().equals("SOLD")).count();
+        Integer unsoldPlayers = (int) players.stream().filter(p -> p.getStatus().toString().equals("UNSOLD")).count();
+
+        Map<Integer, PlayerEntity> teamHighestBidPlayerMap = new HashMap<>();
+
+        Map<Integer, PlayerEntity> teamLowestBidPlayerMap = new HashMap<>();
+        
+        Map<Integer, List<PlayerEntity>> teamPlayersMap = new HashMap<>();
+        
+        PlayerEntity overallHighestBidPlayer = null;
+        PlayerEntity overallLowestBidPlayer = null;
+        
+     
+        for (TeamEntity team : teams) {
+            List<PlayerEntity> teamPlayers = playerRepo.findSoldPlayersByTeamAndAuction(team, auctionId);
+            teamPlayersMap.put(team.getTeamId(), teamPlayers);
+            
+         // Highest Bid Player of Team
+            PlayerEntity highestBidPlayer = teamPlayers.stream()
+                    .max(Comparator.comparing(PlayerEntity::getSoldPrice))
+                    .orElse(null);
+
+            // Lowest Bid Player of Team
+            PlayerEntity lowestBidPlayer = teamPlayers.stream()
+                    .min(Comparator.comparing(PlayerEntity::getSoldPrice))
+                    .orElse(null);
+
+            teamHighestBidPlayerMap.put(team.getTeamId(), highestBidPlayer);
+            teamLowestBidPlayerMap.put(team.getTeamId(), lowestBidPlayer);
+            
+            
+            
+            
+        }
+     // Highest Bid Player in Auction
+        overallHighestBidPlayer = players.stream()
+                .filter(p -> p.getStatus().toString().equals("SOLD"))
+                .max(Comparator.comparing(PlayerEntity::getSoldPrice))
+                .orElse(null);
+
+        //Lowest Bid Player in Auction
+        overallLowestBidPlayer = players.stream()
+                .filter(p -> p.getStatus().toString().equals("SOLD"))
+                .min(Comparator.comparing(PlayerEntity::getSoldPrice))
+                .orElse(null);
+        
+        model.addAttribute("totalPlayers", totalPlayers);
+        model.addAttribute("totalTeams", totalTeams);
+        model.addAttribute("soldPlayers", soldPlayers);
+        model.addAttribute("unsoldPlayers", unsoldPlayers);
+        model.addAttribute("teams", teams);
+        model.addAttribute("teamPlayersMap", teamPlayersMap);
+        model.addAttribute("teamHighestBidPlayerMap", teamHighestBidPlayerMap);
+        model.addAttribute("teamLowestBidPlayerMap", teamLowestBidPlayerMap);
+        model.addAttribute("overallHighestBidPlayer", overallHighestBidPlayer);
+        model.addAttribute("overallLowestBidPlayer", overallLowestBidPlayer);
+
+        return "ViewAuctionDetails"; 
+    }
+	
+	
+	@GetMapping("/reports")
+	public String viewUserReports(HttpSession session, Model model) {
+	    
+	    UserEntity user = (UserEntity) session.getAttribute("user");
+
+	    List<AuctionEntity> userAuctions = auctionRepo.findByCreatedBy(user);  // Assuming you have this method
+
+	    model.addAttribute("userAuctions", userAuctions);
+
+	    return "Reports";
+	}
+	
+	
+	
+	
+	
 }

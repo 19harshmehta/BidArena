@@ -232,12 +232,30 @@
         <!-- Left Panel -->
         <div class="panel">
         <%if(currentPlayer != null){ %>
-            
-            <!-- <img src="<%= currentPlayer.getImageUrl() %>" width="300px;" alt="Player Image"> -->
-            <img src="/assets/players/one.jpeg" width="300px;" alt="Player Image">
+            <%
+		    String imageUrl = currentPlayer.getImageUrl();
+            //out.println("Image URL from PlayerEntity: " + imageUrl);
+            String fileId = null;
+
+            int idStartIndex = imageUrl.indexOf("id=");
+            if (idStartIndex != -1) {
+              fileId = imageUrl.substring(idStartIndex + 3);
+            }
+
+            if (fileId != null) {
+              //out.println("Extracted File ID: " + fileId);
+              // You can now use the 'fileId' variable
+            } else {
+              //out.println("Could not extract the File ID from the URL.");
+            }
+%>
+<!--<img id="playerImage" src="https://drive.google.com/uc?id=<%= fileId %>" alt="Player Image" width="150" height="150" />-->
+            <img src="/assets/players/one.jpeg" width="300px;" alt="Player Image"> 
+    <!--        <img src="https://drive.google.com/uc?export=view&id=1Kf707AOu12Ct16BYh0W0xVrYf9FODVl6"width="300px;" alt="Player Image">-->
 			
 			    <p><strong>Name:</strong> <%= currentPlayer.getName() %></p>
 			    <p><strong>Age:</strong> <%= currentPlayer.getAge() %></p>
+			    <p>Image URL: <%= currentPlayer.getImageUrl() %></p>
 			<div class="player-info-vertical-scroll">
 			    <p><strong>Description:</strong> <%= currentPlayer.getSkills() %></p>
 			</div>
@@ -427,14 +445,14 @@
                 }
             });
         }
-    </script>
+        
+</script>
 <%}else{ %>
 		<p>No players left</p>
 		<script>
 		window.location.href = "/welcome";
 		</script>
 <% }%>
-
 
 </body>
 </html>

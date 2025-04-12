@@ -22,4 +22,7 @@ public interface PlayerRepository extends JpaRepository<PlayerEntity, Integer>
 	@Query("SELECT p FROM PlayerEntity p WHERE p.soldToTeam = :teamId AND p.soldPrice > 0 AND p.auction.auctionId = :auctionId")
 	List<PlayerEntity> findSoldPlayersByTeamAndAuction(@Param("teamId") TeamEntity teamId, @Param("auctionId") Integer auctionId);
 	
+	List<PlayerEntity> findByAuction_AuctionId(Integer auction_AuctionId);
+	
+	List<PlayerEntity> findByTeam(TeamEntity team);
 }

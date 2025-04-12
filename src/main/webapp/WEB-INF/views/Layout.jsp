@@ -176,7 +176,7 @@
             <div class="dropdown" id="userDropdown">
                 <a href="#">Profile</a>
                 <a href="#">Settings</a>
-                <a href="#">Logout</a>
+                <a href="/logout">Logout</a>
             </div>
         </div>
     </div>
@@ -187,7 +187,7 @@
         <div class="sidebar" id="sidebar">
             <a href="/welcome">Dashboard</a>
             <a href="createauction">Create Auction</a>
-            <a href="#">Reports</a>
+            <a href="/reports">Reports</a>
             <a href="#">Settings</a>
             <a href="#">Help</a>
         </div>

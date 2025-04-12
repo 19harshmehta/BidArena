@@ -32,7 +32,7 @@ public class PlayerService {
 
     @Autowired
     private PlayerRepository playerRepo;
-
+    
     @Autowired
     private TeamRepository teamRepo;
 
@@ -42,6 +42,19 @@ public class PlayerService {
     private Random random = new Random();
 
     private static final Logger logger = LoggerFactory.getLogger(PlayerService.class);
+    
+    
+    String convertToDirectImageLink(String url) {
+        if (url.contains("drive.google.com")) {
+            String[] parts = url.split("/");
+            if (parts.length > 5) {
+                String fileId = parts[5];
+                return "https://drive.google.com/uc?export=view&id=" + fileId;
+            }
+        }
+        return url;
+    }
+
     
     public void processAndSavePlayers(MultipartFile file, Integer auctionId, List<TeamEntity> teams) throws IOException {
         logger.info("Processing players file for auctionId: {}", auctionId);
@@ -60,6 +73,8 @@ public class PlayerService {
 
         Workbook workbook = new XSSFWorkbook(file.getInputStream());
         Sheet sheet = workbook.getSheetAt(0);
+        
+        
 
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header
@@ -68,7 +83,7 @@ public class PlayerService {
             player.setAuction(auction);
             player.setName(row.getCell(0).getStringCellValue());
             player.setSkills(row.getCell(1).getStringCellValue());
-            player.setImageUrl(row.getCell(2).getStringCellValue());
+            player.setImageUrl(convertToDirectImageLink(row.getCell(2).getStringCellValue()));
             player.setStatus(PlayerEntity.PlayerStatus.valueOf(row.getCell(3).getStringCellValue().toUpperCase()));
 
             if (row.getCell(4).getCellType() == CellType.NUMERIC) {
