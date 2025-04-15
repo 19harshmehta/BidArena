@@ -249,12 +249,16 @@
             }
 %>
 <!--<img id="playerImage" src="https://drive.google.com/uc?id=<%= fileId %>" alt="Player Image" width="150" height="150" />-->
+<<<<<<< Updated upstream
             <img src="/assets/players/one.jpeg" width="265px;" alt="Player Image"> 
+=======
+            <!-- <img src="/assets/players/one.jpeg" width="300px;" alt="Player Image">  -->
+>>>>>>> Stashed changes
     <!--        <img src="https://drive.google.com/uc?export=view&id=1Kf707AOu12Ct16BYh0W0xVrYf9FODVl6"width="300px;" alt="Player Image">-->
-			
+			<img src="/fetchImage/<%=fileId %>" width="200vw" height="200vh" style="object-fit: cover;" loading="lazy"></img>
+			    
 			    <p><strong>Name:</strong> <%= currentPlayer.getName() %></p>
 			    <p><strong>Age:</strong> <%= currentPlayer.getAge() %></p>
-			    <p>Image URL: <%= currentPlayer.getImageUrl() %></p>
 			<div class="player-info-vertical-scroll">
 			    <p><strong>Description:</strong> <%= currentPlayer.getSkills() %></p>
 			</div>
