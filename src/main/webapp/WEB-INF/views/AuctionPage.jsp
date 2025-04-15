@@ -74,7 +74,6 @@
     	
         body { 
         	font-family: Arial, sans-serif;
-        	
         	text-align: center;
         	background: #EDF2FF;
         }
@@ -250,7 +249,7 @@
             }
 %>
 <!--<img id="playerImage" src="https://drive.google.com/uc?id=<%= fileId %>" alt="Player Image" width="150" height="150" />-->
-            <img src="/assets/players/one.jpeg" width="300px;" alt="Player Image"> 
+            <img src="/assets/players/one.jpeg" width="265px;" alt="Player Image"> 
     <!--        <img src="https://drive.google.com/uc?export=view&id=1Kf707AOu12Ct16BYh0W0xVrYf9FODVl6"width="300px;" alt="Player Image">-->
 			
 			    <p><strong>Name:</strong> <%= currentPlayer.getName() %></p>
@@ -269,8 +268,8 @@
 
 			<div id="soldStamp" style="
 			    position: absolute;
-			    top: 150px;
-			    left: 60px;
+			    top: 160px;
+			    left: 100px;
 			    font-size: 64px;
 			    font-weight: bold;
 			    color: green;
@@ -332,6 +331,7 @@
 		        <button class="finalize-button" style="background-color: #dc3545;" onclick="markUnsold()">Unsold</button>
 		    </div>
     	</div>
+    </div>
 
     <script>
         let currentBid = <%= auction.getBasePrice() %>;
