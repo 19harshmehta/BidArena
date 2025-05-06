@@ -88,12 +88,13 @@ public class AuctionController
         session.setAttribute("auctionId", aucEntity.getAuctionId());
         List<AuctionEntity> auctions = auctionRepo.findByCreatedBy(user);
 		session.setAttribute("auctions", auctions);
-		return "AddData";
+		return "redirect:/welcome";
 	}
 	
 	@GetMapping("uploaddata")
-	public String dataUpload() {
-		return "AddData";
+	public String dataUpload(@RequestParam("auctionId") Integer auctionId, Model model) {
+	    model.addAttribute("auctionId", auctionId);
+	    return "AddData"; // This is your AddData.jsp
 	}
 	private static final Logger logger = LoggerFactory.getLogger(AuctionController.class);
 	@GetMapping("/startAuction")

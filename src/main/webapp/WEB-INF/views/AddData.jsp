@@ -2,7 +2,7 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 
 <%
-    Integer auctionId = (Integer) session.getAttribute("auctionId");
+    //Integer auctionId = (Integer) session.getAttribute("auctionId");
 %>
 
 <!DOCTYPE html>
@@ -75,7 +75,7 @@
         function validateForm() {
             var teamsFile = document.getElementById("teamsFile").value;
             var playersFile = document.getElementById("playersFile").value;
-            var auctionId = "<%= auctionId %>";
+            var auctionId = document.querySelector('input[name="auctionId"]').value;
 
             if (!teamsFile || !playersFile) {
                 alert("Please select both Teams and Players Excel files.");
@@ -100,9 +100,13 @@
                 <span class="login100-form-title p-b-26">
                     Upload Auction Data
                 </span>
-
+				<p style="color: red;"><strong>The files uploaded should be strictly in the given format.</strong></p>
+			    <p>
+			        <a style="color: green;" href="/assets/samples/teams_format.xlsx" class="txt2" download>Download Teams Format</a> <br>
+			        <a style="color: blue;" href="/assets/samples/players_format.xlsx" class="txt2" download>Download Players Format</a>
+			    </p>
                 <%-- Display Auction ID --%>
-                <p><b>Active Auction ID:</b> <%= (auctionId != null) ? auctionId : "Not Set" %></p>
+                <p><b>Active Auction ID:</b> ${auctionId}</p>
 
                 <%-- Success/Error Messages --%>
                 <% if (request.getAttribute("success") != null) { %>
@@ -112,6 +116,11 @@
                     <p class="error-message"><%= request.getAttribute("error") %></p>
                 <% } %>
 
+				<!-- File Format Info -->
+				<div style="margin-bottom: 20px; text-align: center;">
+    			<input type="hidden" name="auctionId" value="${auctionId}" />
+</div>
+				
                 <!-- Upload Teams File -->
                 <div class="input-wrapper">
                     <input class="input100 file-input" type="file" name="teamsFile" id="teamsFile" accept=".xlsx, .xls" required>

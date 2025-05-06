@@ -124,6 +124,7 @@
                         <div class="card-buttons2">
                             <a href="${pageContext.request.contextPath}/report/download?auctionId=<%=auction.getAuctionId() %>" class="download-btn wid">Download Report</a>
                             <a href="viewdetails?auctionId=<%=auction.getAuctionId()%>" class="download-btn details-btn wid">View Details</a> 
+                            <a href="uploaddata?auctionId=<%=auction.getAuctionId()%>" class="download-btn details-btn wid">Add Data</a> 
                         </div>
                     	</div>
                     </div>

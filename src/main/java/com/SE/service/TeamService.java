@@ -41,9 +41,9 @@ public class TeamService {
 
         workbook.close();
 
-        if (uploadedTeamsCount != expectedTeams) {
-            return "The number of teams in the uploaded file (" + uploadedTeamsCount + ") does not match the expected number (" + expectedTeams + ").";
-        }
+//        if (uploadedTeamsCount != expectedTeams) {
+//            return "The number of teams in the uploaded file (" + uploadedTeamsCount + ") does not match the expected number (" + expectedTeams + ").";
+//        }
 
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; 

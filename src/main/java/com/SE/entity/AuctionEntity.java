@@ -19,10 +19,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name = "auction")
 @Data
+@ToString(exclude = {"createdBy", "teams", "players", "bids"})
 public class AuctionEntity 
 {
 	 	@Id

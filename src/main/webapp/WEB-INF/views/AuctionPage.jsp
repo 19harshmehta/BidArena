@@ -225,7 +225,7 @@
 <body>
 <!--<audio id="soldSound" src="resources/static/assets/sound/ipl_tune.mp3" preload="auto"></audio>-->	
     <div class="top-nav">
-		<div class="brand"><%= auction.getLeagueName() %></div>
+		<div class="brand"><%= auction.getLeagueName() %></div> <a href="/welcome" style="align-self: right;margin-right: 10px;color: white;text-decoration: none;">Go back to Dashboard</a>
 	</div>
     <div class="container">
         <!-- Left Panel -->

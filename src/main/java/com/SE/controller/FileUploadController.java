@@ -34,20 +34,21 @@ public class FileUploadController {
     @PostMapping("/uploadfiles")
     public String uploadFiles(@RequestParam("teamsFile") MultipartFile teamsFile,
                               @RequestParam("playersFile") MultipartFile playersFile,
+                              @RequestParam("auctionId") Integer auctionId,
                               HttpSession session,
                               RedirectAttributes redirectAttributes) {
 
-        Integer auctionId = (Integer) session.getAttribute("auctionId"); // Fetch auctionId from session
+//        Integer auctionId = (Integer) session.getAttribute("auctionId"); // Fetch auctionId from session
         if (auctionId == null) {
             redirectAttributes.addFlashAttribute("error", "Auction ID not found. Please create an auction first.");
-            return "redirect:/uploaddata";
+            return "redirect:/uploaddata?auctionId=" + auctionId;
         }
 
         try {
             String teamError = teamService.processAndSaveTeams(teamsFile, auctionId);
             if (teamError != null) {
                 redirectAttributes.addFlashAttribute("error", teamError);
-                return "redirect:/uploaddata";
+                return "redirect:/uploaddata?auctionId=" + auctionId;
             }
 
             List<TeamEntity> teams = teamService.getTeamsByAuctionId(auctionId);
